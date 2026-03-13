@@ -1,4 +1,4 @@
-from langchain_groq import ChatGroq
+
 from dotenv import load_dotenv
 import os
 from langgraph.graph import StateGraph,START,END
@@ -9,8 +9,7 @@ from langchain_core.messages import HumanMessage,BaseMessage,SystemMessage
 
 class SchemaInfo(TypedDict):
     question:str
-    all_table_names:Annotated[List[str], operator.add]
-    relavent_table_names:Annotated[List[str], operator.add]
+    all_tables:Annotated[List[str], operator.add]
+    selected_tables:Annotated[List[str], operator.add]
     error:str
 
-    
