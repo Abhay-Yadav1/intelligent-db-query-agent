@@ -1,8 +1,10 @@
+import sys
+import os
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, project_root)
 from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 import os
-from langgraph.graph import StateGraph,START,END
-import operator
 from langchain_core.prompts import ChatPromptTemplate
 from typing import List, TypedDict,Annotated
 from langchain_core.messages import HumanMessage,BaseMessage,SystemMessage

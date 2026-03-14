@@ -1,6 +1,11 @@
+import sys
+import os
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, project_root)
+
 from langgraph.graph import StateGraph, START, END
-from schema_selector import schema_selector_node
-from state1 import SchemaInfo
+from agents.schema_selector import schema_selector_node
+from graphs.state1 import SchemaInfo
 
 def create_schema_workflow():
     workflow=StateGraph(SchemaInfo)
