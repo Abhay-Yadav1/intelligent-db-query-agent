@@ -1,6 +1,6 @@
 from langgraph.graph import StateGraph, START, END
-from graphs.state1 import SchemaInfo
-from agents.schema_selector import schema_selector_node
+from schema_selector import schema_selector_node
+from state1 import SchemaInfo
 
 def create_schema_workflow():
     workflow=StateGraph(SchemaInfo)
@@ -10,5 +10,27 @@ def create_schema_workflow():
     app=workflow.compile()
     return app
 
-
+if __name__ == "__main__":
+    app=create_schema_workflow()
+    result = app.invoke({
+        "question": "What is the total order value for each customer?",
+        "all_tables": ["customers", "orders", "products"],
+        "selected_tables": [],
+        "error": ""
+    })
+    print(f"Question: {result['question']}")
+    print(f"Selected tables: {result['selected_tables']}")
+    print()
+    
+    # Test Case 3: Products only
+    print("Test 3: Products query")
+    result = app.invoke({
+        "question": "List all available products",
+        "all_tables": ["customers", "orders", "products"],
+        "selected_tables": [],
+        "error": ""
+    })
+    print(f"Question: {result['question']}")
+    print(f"Selected tables: {result['selected_tables']}")
+    print()
 
