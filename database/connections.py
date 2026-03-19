@@ -1,7 +1,10 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import inspect
-from config import DATABASE_URL
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///my_database.db")
 class DatabaseManager:
     def __init__(self, db_url):
         self.engine=create_engine(db_url, echo=False)
