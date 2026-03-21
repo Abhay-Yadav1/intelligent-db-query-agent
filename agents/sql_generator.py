@@ -6,7 +6,8 @@ from typing import List, Dict
 import sys
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
-
+from database.connections import DatabaseManager
+from config import DATABASE_URL
 from utils.few_examples import format_examples_for_prompt
 
 load_dotenv()
@@ -104,7 +105,8 @@ def sql_generator_node(state: Dict) -> Dict:
     LangGraph node function for SQL generation
     """
     # TODO: Extract question and selected_tables from state
-    
+    question = state["question"]
+    selected_tables = state["selected_tables"]
     # TODO: Get schemas for selected tables (you'll need DatabaseManager)
     # TODO: Initialize SQLGenerator
     # TODO: Generate SQL
@@ -112,7 +114,31 @@ def sql_generator_node(state: Dict) -> Dict:
     pass       
 
   
-
+# Test the agent
+if __name__ == "__main__":
+    # Simple test without full schema
+    generator = SQLGenerator()
+    
+    # Mock schema for testing
+    test_schema = {
+        "table_name": "customers",
+        "columns": [
+            {"name": "id", "type": "INTEGER"},
+            {"name": "name", "type": "VARCHAR"},
+            {"name": "email", "type": "VARCHAR"},
+            {"name": "city", "type": "VARCHAR"}
+        ],
+        "primary_keys": ["id"],
+        "foreign_keys": []
+    }
+    
+    sql = generator.generate_sql(
+        question="Show me all customers from Delhi",
+        schemas=[test_schema]
+    )
+    
+    print("Generated SQL:")
+    print(sql)
 
         
     
