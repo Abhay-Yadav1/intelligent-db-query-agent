@@ -1,5 +1,3 @@
-
-from dotenv import load_dotenv
 import os
 from langgraph.graph import StateGraph,START,END
 import operator
@@ -11,5 +9,6 @@ class SchemaInfo(TypedDict):
     question:str
     all_tables:Annotated[List[str], operator.add]
     selected_tables:Annotated[List[str], operator.add]
+    generated_sql: str
     error:str
 
