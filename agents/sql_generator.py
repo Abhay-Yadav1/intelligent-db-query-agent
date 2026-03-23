@@ -104,41 +104,51 @@ def sql_generator_node(state: Dict) -> Dict:
     """
     LangGraph node function for SQL generation
     """
-    # TODO: Extract question and selected_tables from state
-    question = state["question"]
-    selected_tables = state["selected_tables"]
-    # TODO: Get schemas for selected tables (you'll need DatabaseManager)
-    # TODO: Initialize SQLGenerator
-    # TODO: Generate SQL
-    # TODO: Return updated state with generated_sql
-    pass       
+    try:
+        # Extract from state
+        question = state["question"]
+        selected_tables = state["selected_tables"]
+         # ✅ Add these lines
+        current_file = os.path.abspath(__file__)
+        agents_folder = os.path.dirname(current_file)
+        project_root = os.path.dirname(agents_folder)
+        db_path = os.path.join(project_root, "data", "my_database.db")
+        db_url = f"sqlite:///{db_path}"
+        
+        print(f"DEBUG: Database path: {db_path}")  # For verification
+        print(f"DEBUG: File exists: {os.path.exists(db_path)}")
+        db_manager = DatabaseManager(db_url)
+        
+        schemas = []
+        for table_name in selected_tables:
+            schema = db_manager.get_table_schema(table_name)
+            schema["table_name"] = table_name
+            schemas.append(schema)
+        
+        # Generate SQL
+        generator = SQLGenerator()
+        generated_sql = generator.generate_sql(question, schemas)
+        
+        # Close connection
+        db_manager.close()
+        
+        return {"generated_sql": generated_sql}
+        
+    except Exception as e:
+        return {
+            "generated_sql": "",
+            "error": f"SQL generation failed: {str(e)}"
+        }
 
-  
-# Test the agent
 if __name__ == "__main__":
-    # Simple test without full schema
-    generator = SQLGenerator()
-    
-    # Mock schema for testing
-    test_schema = {
-        "table_name": "customers",
-        "columns": [
-            {"name": "id", "type": "INTEGER"},
-            {"name": "name", "type": "VARCHAR"},
-            {"name": "email", "type": "VARCHAR"},
-            {"name": "city", "type": "VARCHAR"}
-        ],
-        "primary_keys": ["id"],
-        "foreign_keys": []
+    # Test the node function
+    test_state = {
+        "question": "Show customers from Delhi",
+        "selected_tables": ["customers"],
+        "all_tables": ["customers", "orders"],
+        "generated_sql": "",
+        "error": ""
     }
     
-    sql = generator.generate_sql(
-        question="Show me all customers from Delhi",
-        schemas=[test_schema]
-    )
-    
-    print("Generated SQL:")
-    print(sql)
-
-        
-    
+    result = sql_generator_node(test_state)
+    print("Generated SQL:", result)
