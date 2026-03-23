@@ -115,9 +115,10 @@ def sql_generator_node(state: Dict) -> Dict:
         db_path = os.path.join(project_root, "data", "my_database.db")
         db_url = f"sqlite:///{db_path}"
         
-        print(f"DEBUG: Database path: {db_path}")  # For verification
-        print(f"DEBUG: File exists: {os.path.exists(db_path)}")
+        """print(f"DEBUG: Database path: {db_path}")  # For verification
+        print(f"DEBUG: File exists: {os.path.exists(db_path)}")"""
         db_manager = DatabaseManager(db_url)
+        print("path: ",db_url)
         
         schemas = []
         for table_name in selected_tables:

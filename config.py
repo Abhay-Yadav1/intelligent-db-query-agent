@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Database configuration
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///my_database.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "D:\Downloads\intelligent-db-query-agent\data\my_database.db")
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 
 # OpenAI configuration (future use)

@@ -1,5 +1,5 @@
 langchain
-langchain-grok
 langgraph
 sqlalchemy
 python-dotenv
+langchain-grok
