@@ -144,12 +144,12 @@ def sql_generator_node(state: Dict) -> Dict:
 if __name__ == "__main__":
     # Test the node function
     test_state = {
-        "question": "Show customers from Delhi",
-        "selected_tables": ["customers"],
-        "all_tables": ["customers", "orders"],
-        "generated_sql": "",
-        "error": ""
-    }
+    "question": "Show customer names with their order count",
+    "selected_tables": ["customers", "orders"],
+    "all_tables": ["customers", "orders"],
+    "generated_sql": "",
+    "error": ""
+     }
     
     result = sql_generator_node(test_state)
     print("Generated SQL:", result)
