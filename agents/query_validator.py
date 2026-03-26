@@ -75,6 +75,17 @@ class QueryValidator:
             
         return "LOW"
 
+def query_validator_node(state:Dict)-> Dict:
+    generated_sql=state.get("generated_sql","")
+    validator=QueryValidator()
+    validation_result=validator.validate_query(generated_sql)
+    return {
+        "is_safe": validation_result["is_safe"],
+        "risk_level": validation_result["risk_level"],
+        "validation_issues": validation_result["issues"],
+        "needs_approval": validation_result["needs_approval"]
+    }
+
 
 
         
