@@ -86,6 +86,29 @@ def query_validator_node(state:Dict)-> Dict:
         "needs_approval": validation_result["needs_approval"]
     }
 
+if __name__ == "__main__":
+    validator = QueryValidator()
+    
+    # Test Case 1: Safe SELECT query
+    print("Test 1: Safe SELECT")
+    result = validator.validate_query("SELECT * FROM customers WHERE city = 'Delhi'")
+    print(result)
+    print()
+    
+    # Test Case 2: Dangerous DELETE query
+    print("Test 2: DELETE query")
+    result2 = validator.validate_query("DELETE FROM customers WHERE id = 1")
+    print(result2)
+    print()
 
+    print("Test 3: DROP TABLE query")
+    result3 = validator.validate_query("DROP TABLE customers")
+    print(result3)
+    print()
+    
+    # Test Case 4: UPDATE query
+    print("Test 4: UPDATE query")
+    result4 = validator.validate_query("UPDATE customers SET city = 'Mumbai' WHERE id = 1")
+    print(result4)
 
         
