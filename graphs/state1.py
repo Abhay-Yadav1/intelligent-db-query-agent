@@ -10,5 +10,9 @@ class SchemaInfo(TypedDict):
     all_tables:Annotated[List[str], operator.add]
     selected_tables:Annotated[List[str], operator.add]
     generated_sql: str
+    is_safe: bool                   
+    risk_level: str                 
+    validation_issues: List[str]    
+    needs_approval: bool
     error:str
 
