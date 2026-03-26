@@ -23,11 +23,11 @@ class QueryValidator:
             "needs_approval":False,
             "sql":sql
             }
-        critical_ops=check_critical_operations(sql)
+        critical_ops=self.check_critical_operations(sql)
         if(critical_ops):
             result["issues"].extend(critical_ops)
             result["is_safe"]=False
-        dangerous_ops=check_dangerous_operations(sql)
+        dangerous_ops=self.check_dangerous_operations(sql)
         if (dangerous_ops):
             result['issues'].extend(dangerous_ops)
         if not self._validate_syntax(sql):
@@ -54,3 +54,27 @@ class QueryValidator:
             if re.search(r'\b' + keyword + r'\b', sql_upper):
                 found.append(f"Dangerous operation: {keyword}")
         return found
+    def _validate_syntax(self, sql: str) -> bool:
+        if not sql or not sql.strip():
+            return False
+        if sql.count('(') != sql.count(')'):
+            return False
+        sql_upper = sql.strip().upper()
+        valid_starts = ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'DROP', 'ALTER']
+        if not (sql_upper.startswith(key) for key in valid_starts):
+            return False
+        return True
+    def _calc_risk_level(self,issues:List[str])->str:
+        for issue in issues:
+            if issue.startswith('CRITICAL'):
+                return "HIGH"
+            
+            dangerous_cnt=len([i for i in issues if "Dangerous operation" in i])
+            if dangerous_cnt>0:
+                return "MEDIUM"
+            
+        return "LOW"
+
+
+
+        
