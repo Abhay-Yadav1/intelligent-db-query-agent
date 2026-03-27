@@ -43,7 +43,7 @@ class DatabaseManager:
 if __name__ == "__main__":
     db_manager=DatabaseManager(DATABASE_URL)
     print("Schema for 'customers' table:")
-    print(db_manager.get_table_schema('customers'))
+    print(db_manager.execute_query("Select * from customers;"))
     db_manager.close()          
         
 
