@@ -86,33 +86,37 @@ class QueryExecutor:
 
     def close(self):
         """Close database connection"""
-        # TODO: Close DatabaseManager connection
         self.db_manager.close()
         
 
 # Node function for LangGraph
 def query_executor_node(state: Dict) -> Dict:
-    """
-    LangGraph node function for query execution
-    """
-    # TODO: Extract generated_sql, is_safe from state
-    # TODO: Get database path/URL
-    # TODO: Initialize QueryExecutor
-    # TODO: Execute query if safe
-    # TODO: Close connection
-    # TODO: Return updated state with execution results
-    pass
+    try:
+        generated_sql=state.get("generated_sql","")
+        is_safe=state.get("is_safe",False)
+        executor=QueryExecutor(DATABASE_URL)
+        result=executor.execute_query(generated_sql,is_safe)
+        executor.close()
+        return {
+            "execution_status": result["execution_status"],
+            "query_results": result["results"],
+            "result_count": result["row_count"],
+            "final_response": result["formatted_response"]
+        }
+    except Exception as e:
+        return {
+            "execution_status": "error",
+            "query_results": [],
+            "result_count": 0,
+            "final_response": f"Execution failed: {str(e)}",
+            "error": str(e)
+        }
+    
 
 # Test the executor
 if __name__ == "__main__":
-    # Setup database path
-    current_file = os.path.abspath(__file__)
-    agents_folder = os.path.dirname(current_file)
-    project_root = os.path.dirname(agents_folder)
-    db_path = os.path.join(project_root, "data", "my_database.db")
-    db_url = f"sqlite:///{db_path}"
     
-    executor = QueryExecutor(db_url)
+    executor = QueryExecutor(DATABASE_URL)
     
     # Test Case 1: SELECT query
     print("Test 1: SELECT query")
