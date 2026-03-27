@@ -2,7 +2,7 @@ import os
 from langgraph.graph import StateGraph,START,END
 import operator
 from langchain_core.prompts import ChatPromptTemplate
-from typing import List, TypedDict,Annotated,Any
+from typing import List, TypedDict,Annotated,Any,Optional
 from langchain_core.messages import HumanMessage,BaseMessage,SystemMessage
 
 class SchemaInfo(TypedDict):
@@ -18,5 +18,7 @@ class SchemaInfo(TypedDict):
     query_results: List[Any]         
     result_count: int                
     final_response: str
+    human_approved: Optional[bool]
+    approval_message: str
     error:str
 
