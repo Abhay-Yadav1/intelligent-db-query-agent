@@ -59,7 +59,7 @@ if __name__ == "__main__":
     
     # Initial run - will pause at approval
     result = app.invoke({
-        "question": "Delete customers from New York",
+        "question": "Show all customer named",
         "all_tables": ["customers", "orders"],
         "selected_tables": [],
         # ... (rest of initial state)
