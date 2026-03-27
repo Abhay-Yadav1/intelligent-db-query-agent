@@ -2,7 +2,7 @@ from langgraph.graph import StateGraph, START, END
 from typing import Literal
 import sys
 import os
-
+from langgraph.checkpoint.memory import MemorySaver
 # Fix imports
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
@@ -42,31 +42,42 @@ def create_complete_workflow():
     workflow.add_edge("request_approval", "execute_query")
    
     workflow.add_edge("execute_query", END)
-    app = workflow.compile()
+    memory = MemorySaver()
+    app = workflow.compile(
+        checkpointer=memory,
+        interrupt_before=["execute_query"]  # Pause before execution if approval needed
+    )
     return app
 
 if __name__ == "__main__":
     app = create_complete_workflow()
     
-    # Test 1: Safe query (no approval needed)
-    print("=== Test 1: Safe SELECT Query ===")
+    # Test 2: Risky query (needs approval)
+    print("=== Test 2: DELETE Query (Needs Approval) ===")
+    
+    config = {"configurable": {"thread_id": "test-thread-1"}}
+    
+    # Initial run - will pause at approval
     result = app.invoke({
-        "question": "Show all customers from New York",
+        "question": "Delete customers from New York",
         "all_tables": ["customers", "orders"],
         "selected_tables": [],
-        "generated_sql": "",
-        "is_safe": True,
-        "risk_level": "LOW",
-        "validation_issues": [],
-        "needs_approval": False,
-        "execution_status": "",
-        "query_results": [],
-        "result_count": 0,
-        "final_response": "",
-        "human_approved": None,
-        "approval_message": "",
-        "error": ""
-    })
+        # ... (rest of initial state)
+    }, config)
     
-    print("Final Response:", result["final_response"])
-    print("Results:", result["query_results"])
+    print("Paused for approval")
+    print("Approval Message:", result.get("approval_message"))
+    
+    # Simulate human approval
+    print("\n--- Human approves ---")
+    
+    # Update state with approval
+    app.update_state(
+        config,
+        {"human_approved": True, "is_safe": True}
+    )
+    
+    # Resume execution
+    final_result = app.invoke(None, config)
+    
+    print("Final Response:", final_result["final_response"])
