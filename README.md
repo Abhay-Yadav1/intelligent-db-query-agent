@@ -41,7 +41,7 @@ intelligent-db-agent/
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/YOUR_USERNAME/intelligent-db-query-agent.git
+git clone https://github.com/Abhay-Yadav1/intelligent-db-query-agent.git
 cd intelligent-db-query-agent
 ```
 
