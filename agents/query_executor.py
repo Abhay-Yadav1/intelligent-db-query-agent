@@ -121,7 +121,7 @@ if __name__ == "__main__":
     # Test Case 1: SELECT query
     print("Test 1: SELECT query")
     result = executor.execute_query(
-        "SELECT * FROM customers WHERE city = 'Delhi'",
+        "SELECT * FROM customers",
         is_safe=True
     )
     print(result)

@@ -28,6 +28,10 @@ class DatabaseQueryAgent:
         initial_state=self._create_initial_state(question)
         config={"configurable":{"thread_id":thread_id}}
         result=self.workflow.invoke(initial_state,config)
+        print("\n=== DEBUG: Complete Result ===")
+        for key, value in result.items():
+             print(f"{key}: {value}")
+             print("=" * 60)
         if result.get("needs_approval") and result.get("human_approved") is None:
             print("\n" + "=" * 60)
             print(result.get("approval_message", "Approval required"))
