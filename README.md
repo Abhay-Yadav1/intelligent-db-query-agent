@@ -2,40 +2,44 @@
 
 An AI-powered system that converts natural language questions into SQL queries using LangGraph and LangChain.
 
-## 🎯 Project Overview
+## ✨ Features
 
-This project implements a multi-agent system that:
-- Understands natural language questions about databases
-- Generates safe and accurate SQL queries
-- Validates queries for security and correctness
-- Executes queries with human-in-the-loop approval for risky operations
-- Learns from past queries to improve accuracy
+- 🧠 **Natural Language to SQL** - Ask questions in plain English
+- 🔍 **Smart Schema Selection** - Automatically identifies relevant tables
+- 🤖 **AI-Powered SQL Generation** - Uses few-shot learning for accurate queries
+- 🛡️ **Safety Validation** - Detects dangerous operations (DELETE, DROP, etc.)
+- 👤 **Human-in-the-Loop** - Requires approval for risky queries
+- ⚡ **Instant Execution** - Safe queries execute immediately
+- 📊 **Formatted Results** - Clean, readable query results
+
+## 🏗️ Architecture
+```
+User Question → Schema Selector → SQL Generator → Validator
+                                                      ↓
+                                                 Safe? ───Yes→ Execute → Results
+                                                      ↓
+                                                     No
+                                                      ↓
+                                            Human Approval
+                                                ↓        ↓
+                                            Approve  Reject
+                                                ↓        ↓
+                                            Execute   Block
+```
 
 ## 🛠️ Tech Stack
 
-- **LangGraph**: Agent orchestration and workflow management
-- **LangChain**: LLM integration and chain building
-- **SQLAlchemy**: Database connection and ORM
-- **OpenAI GPT-4**: Language model for understanding and generation
-- **SQLite**: Development database (easily adaptable to PostgreSQL/MySQL)
+- **LangGraph** - Agent orchestration and workflow management
+- **LangChain** - LLM integration
+- **Groq (Llama 3.1)** - Language model
+- **SQLAlchemy** - Database operations
+- **SQLite** - Database (easily adaptable to PostgreSQL/MySQL)
 
-## 📁 Project Structure
-```
-intelligent-db-agent/
-├── agents/          # Individual agent implementations
-├── database/        # Database connection and utilities
-├── graph/           # LangGraph workflow definitions
-├── utils/           # Helper functions and utilities
-├── data/            # Sample databases and examples
-├── tests/           # Unit and integration tests
-└── main.py          # Entry point
-```
-
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
 - Python 3.9+
-- OpenAI API key
+- Groq API key
 
 ### Installation
 
@@ -48,7 +52,7 @@ cd intelligent-db-query-agent
 2. Create virtual environment:
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 ```
 
 3. Install dependencies:
@@ -57,24 +61,126 @@ pip install -r requirements.txt
 ```
 
 4. Create `.env` file:
-```bash
-OPENAI_API_KEY=your_api_key_here
-DATABASE_URL=sqlite:///./data/sample_data.db
+```
+GROQ_API_KEY=your_groq_api_key_here
+DATABASE_URL=sqlite:///./data/my_database.db
+ENVIRONMENT=development
 ```
 
+5. Run the agent:
+```bash
+python main.py
+```
 
+## 💡 Usage Examples
 
-## 🎓 Learning Goals
+### Safe Queries (Execute Immediately)
+```
+❓ Show all customers from Delhi
+→ SELECT * FROM customers WHERE city = 'Delhi';
+✅ Found 2 records
 
-This project is part of my journey to master:
-- Agentic AI systems and orchestration
-- LangGraph for complex workflows
-- Production-ready AI applications
-- Safe AI-database interactions
+❓ Count total orders
+→ SELECT COUNT(*) FROM orders;
+✅ Found 1 record
 
+❓ Show customer names with order count
+→ SELECT c.name, COUNT(o.id) FROM customers c JOIN orders o...
+✅ Found 3 records
+```
 
+### Risky Queries (Requires Approval)
+```
+❓ Delete customers from Mumbai
 
+⚠️  APPROVAL REQUIRED
+SQL: DELETE FROM customers WHERE city = 'Mumbai'
+Risk Level: MEDIUM
+Issues: Dangerous operation: DELETE
+
+✋ Approve? (yes/no): no
+❌ Query execution rejected
+```
+
+## 📁 Project Structure
+```
+intelligent-db-query-agent/
+├── agents/               # AI agent implementations
+│   ├── schema_selector.py
+│   ├── sql_generator.py
+│   ├── query_validator.py
+│   ├── query_executor.py
+│   └── human_approval.py
+├── graphs/              # LangGraph workflows
+│   ├── state1.py
+│   └── complete_workflow.py
+├── database/            # Database operations
+│   ├── connections.py
+│   └── setup_sample_db.py
+├── utils/               # Utilities
+│   └── few_examples.py
+├── data/                # Database files
+├── tests/               # Test files
+├── main.py             # CLI entry point
+└── README.md
+```
+
+## 🧪 Testing
+
+Run tests:
+```bash
+python tests/test_complete_workflow.py
+```
+
+## 🎯 How It Works
+
+1. **Schema Selector**: Identifies relevant database tables
+2. **SQL Generator**: Creates SQL using few-shot learning
+3. **Validator**: Checks query safety and assigns risk level
+4. **Human Approval**: Pauses for approval if risky
+5. **Executor**: Runs the query and formats results
+
+## 🔒 Safety Features
+
+- ✅ Keyword detection (DELETE, DROP, TRUNCATE, ALTER)
+- ✅ Risk scoring (LOW/MEDIUM/HIGH)
+- ✅ Syntax validation
+- ✅ Human approval for dangerous operations
+- ✅ Query rejection mechanism
+
+## 📊 Project Stats
+
+- **Lines of Code**: ~1000+
+- **Agents**: 5 specialized agents
+- **Development Time**: 9 days
+- **Test Coverage**: 10+ test scenarios
+
+## 🤝 Contributing
+
+Feel free to open issues or submit pull requests!
+
+## 📝 License
+
+MIT License
+
+## 👨‍💻 Author
+
+Built by [Your Name] as a learning project in Agentic AI
 
 ---
 
-**Note**: This is an active learning project. Commits are made daily as I build and improve the system.
+**⭐ Star this repo if you found it useful!**
+```
+
+---
+
+## **Task 4: Create requirements.txt - Final Version (2 mins)**
+
+**File: `requirements.txt`**
+```
+langchain==0.1.0
+langchain-openai==0.0.5
+langchain-groq==0.0.1
+langgraph==0.0.20
+sqlalchemy==2.0.23
+python-dotenv==1.0.0
